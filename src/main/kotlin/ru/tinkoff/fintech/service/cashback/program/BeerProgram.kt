@@ -21,23 +21,33 @@ internal const val DEFAULT_PERCENT = 2
 
 class BeerProgram : Program {
     override fun calculateCashback(transactionInfo: TransactionInfo): Double =
-        (if (transactionInfo.mccCode == MCC_BEER) {
-            if (FIRST_NAME.equals(transactionInfo.firstName, ignoreCase = true)) {
-                if (SECOND_NAME.equals(transactionInfo.lastName, ignoreCase = true)) {
-                    transactionInfo.transactionSum / 100 * FIRST_NAME_PERCENT
+        (with(transactionInfo) {
+            if (mccCode == MCC_BEER) {
+                if (FIRST_NAME.equals(firstName, ignoreCase = true)) {
+                    calculateByLastName(lastName, transactionSum)
                 } else {
-                    transactionInfo.transactionSum / 100 * SECOND_NAME_PERCENT
+                    calculateByMonth(firstName, transactionSum)
                 }
-            } else if (getFirstLetterOfMonth().equals(transactionInfo.firstName[0], ignoreCase = true)) {
-                transactionInfo.transactionSum / 100 * CURRENT_MONTH_PERCENT
-            } else if (getFirstLetterOfMonth(-1).equals(transactionInfo.firstName[0], ignoreCase = true) ||
-                getFirstLetterOfMonth(1).equals(transactionInfo.firstName[0], ignoreCase = true)
-            ) {
-                transactionInfo.transactionSum / 100 * NEAR_MONTH_PERCENT
-            } else {
-                transactionInfo.transactionSum / 100 * DEFAULT_PERCENT
-            }
-        } else 0.0).roundSum()
+            } else 0.0
+        }).roundSum()
+
+    private fun calculateByLastName(lastName: String, transactionSum: Double): Double =
+        if (SECOND_NAME.equals(lastName, ignoreCase = true)) {
+            transactionSum / 100 * FIRST_NAME_PERCENT
+        } else {
+            transactionSum / 100 * SECOND_NAME_PERCENT
+        }
+
+    private fun calculateByMonth(firstName: String, transactionSum: Double): Double =
+        if (getFirstLetterOfMonth().equals(firstName[0], ignoreCase = true)) {
+            transactionSum / 100 * CURRENT_MONTH_PERCENT
+        } else if (getFirstLetterOfMonth(-1).equals(firstName[0], ignoreCase = true) ||
+            getFirstLetterOfMonth(1).equals(firstName[0], ignoreCase = true)
+        ) {
+            transactionSum / 100 * NEAR_MONTH_PERCENT
+        } else {
+            transactionSum / 100 * DEFAULT_PERCENT
+        }
 
     private fun getFirstLetterOfMonth(fromCurrent: Int = 0): Char =
         Month
