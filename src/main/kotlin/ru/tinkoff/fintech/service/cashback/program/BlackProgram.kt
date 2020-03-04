@@ -5,5 +5,5 @@ import ru.tinkoff.fintech.utils.roundSum
 
 class BlackProgram : Program {
     override fun calculateCashback(transactionInfo: TransactionInfo): Double =
-        roundSum(transactionInfo.transactionSum / 100)
+        (transactionInfo.transactionSum / 100).roundSum()
 }

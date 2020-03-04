@@ -20,8 +20,8 @@ internal const val DEFAULT_PERCENT = 2
 
 
 class BeerProgram : Program {
-    override fun calculateCashback(transactionInfo: TransactionInfo): Double = roundSum(
-        if (transactionInfo.mccCode == MCC_BEER) {
+    override fun calculateCashback(transactionInfo: TransactionInfo): Double =
+        (if (transactionInfo.mccCode == MCC_BEER) {
             if (FIRST_NAME.equals(transactionInfo.firstName, ignoreCase = true)) {
                 if (SECOND_NAME.equals(transactionInfo.lastName, ignoreCase = true)) {
                     transactionInfo.transactionSum / 100 * FIRST_NAME_PERCENT
@@ -37,8 +37,7 @@ class BeerProgram : Program {
             } else {
                 transactionInfo.transactionSum / 100 * DEFAULT_PERCENT
             }
-        } else 0.0
-    )
+        } else 0.0).roundSum()
 
     private fun getFirstLetterOfMonth(fromCurrent: Int = 0): Char =
         Month
