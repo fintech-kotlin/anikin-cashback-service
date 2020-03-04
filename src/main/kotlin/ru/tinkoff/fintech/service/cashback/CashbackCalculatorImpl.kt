@@ -13,7 +13,7 @@ internal const val MCC_BEER = 5921
 
 class CashbackCalculatorImpl : CashbackCalculator {
 
-    override fun calculateCashback(transactionInfo: TransactionInfo): Double = roundSum(
+    override fun calculateCashback(transactionInfo: TransactionInfo): Double =
         MaxCashbackProgramDecorator(
             EvilProgramDecorator(
                 when (transactionInfo.loyaltyProgramName) {
@@ -23,6 +23,5 @@ class CashbackCalculatorImpl : CashbackCalculator {
                     else -> throw IllegalArgumentException("Program not found")
                 }
             )
-        ).calculateCashback(transactionInfo)
-    )
+        ).calculateCashback(transactionInfo).roundSum()
 }

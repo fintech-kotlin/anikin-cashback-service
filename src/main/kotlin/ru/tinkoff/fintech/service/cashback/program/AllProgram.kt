@@ -9,14 +9,12 @@ internal const val LCM_DIVIDER = 1000
 
 class AllProgram : Program {
     override fun calculateCashback(transactionInfo: TransactionInfo): Double =
-        roundSum(
-            if (transactionInfo.mccCode == MCC_SOFTWARE && testPalindrome(transactionInfo.transactionSum * 100)) {
-                lcm(
-                    transactionInfo.firstName.length,
-                    transactionInfo.lastName.length
-                ).toDouble() / LCM_DIVIDER / 100 * transactionInfo.transactionSum
-            } else 0.0
-        )
+        (if (transactionInfo.mccCode == MCC_SOFTWARE && testPalindrome(transactionInfo.transactionSum * 100)) {
+            lcm(
+                transactionInfo.firstName.length,
+                transactionInfo.lastName.length
+            ).toDouble() / LCM_DIVIDER / 100 * transactionInfo.transactionSum
+        } else 0.0).roundSum()
 
     private fun testPalindrome(num: Double, substituteCount: Int = 1): Boolean {
         val numStrVal = BigDecimal(num).toPlainString()
